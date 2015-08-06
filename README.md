@@ -1,2 +1,2 @@
 # naprox
-A Python Twisted based Name Proxy Service
+A Python gevent based Name Proxy Service

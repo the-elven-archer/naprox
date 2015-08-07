@@ -34,12 +34,7 @@ def pretty_log(message):
 def dns_query(record_body, record_type, nameserver):
     """ Query the AUTH DNS servers """
     if record_body is not None or record_type is not None or nameserver is not None:
-        pretty_log("+++> %s" % record_type)
-        pretty_log("+++> %s" % record_body)
-        pretty_log("+++++> %s" % nameserver)
         query_record = dns.name.from_text(str(record_body))
-        if not query_record.is_absolute():
-            pretty_log("+!+> Is absolute")
         if type(record_type) is not int:
             record_type = dns.rdatatype.from_text(record_type)
 

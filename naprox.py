@@ -49,6 +49,14 @@ def dns_handler(s, peer, data):
                                 )
                              )
         #####
+        # NS
+        #####
+        if (qtype == QTYPE.NS or qtype == QTYPE.ANY) and record['qtype'] == "NS":
+            reply.add_answer(RR(qname,
+                                QTYPE.NS,
+                                ttl=record['ttl'],
+                                rdata=NS(label=record['content'])))
+        #####
         # A
         #####
         if (qtype == QTYPE.A or qtype == QTYPE.ANY) and record['qtype'] == "A":

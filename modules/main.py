@@ -13,10 +13,23 @@ import dns.query
 import dns.rdatatype
 import dns.resolver
 
+#
+
+from configobj import ConfigObj
+import os
+
 # DEBUG
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 #
+
+def load_config(config_file=None):
+    """ Load config from file """
+    if config_file is None:
+        config_file = "%s/etc/naprox.conf" % str(os.getcwd())
+    config = ConfigObj(config_file)
+    print "Loading config from %s... " % config_file
+    return config
 
 
 def api_response(dictionary=None):
@@ -34,6 +47,7 @@ def pretty_log(message):
 def dns_query(record_body, record_type, nameserver):
     """ Query the AUTH DNS servers """
     if record_body is not None or record_type is not None or nameserver is not None:
+        print nameserver
         query_record = dns.name.from_text(str(record_body))
         if type(record_type) is not int:
             record_type = dns.rdatatype.from_text(record_type)

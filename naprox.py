@@ -9,14 +9,16 @@ monkey.patch_socket()
 from modules import *
 from dnslib import *
 
+import itertools
+
+configuration = load_config()
+nameservers = itertools.cycle(configuration['nameservers']['default'])
+
 AF_INET = 2
 SOCK_DGRAM = 2
 
 s = socket.socket(AF_INET, SOCK_DGRAM)
-s.bind(('', 53))
-
-IP = "127.0.0.1"
-
+s.bind((configuration['bind'], int(configuration['port'])))
 
 def dns_handler(s, peer, data):
     #
@@ -28,7 +30,7 @@ def dns_handler(s, peer, data):
     pretty_log("Request (%s): %r (%s)" % (str(peer), qname.label, QTYPE[qtype]))
     reply = DNSRecord(DNSHeader(id=id, qr=1, aa=1, ra=1), q=request.q)
 
-    backend_query_fetch = dns_query(qname, qtype, "200.45.75.9")
+    backend_query_fetch = dns_query(qname, qtype, nameservers.next())
     while backend_query_fetch.__len__() > 0:
         record = backend_query_fetch.pop(0)
         #####

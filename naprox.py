@@ -8,16 +8,18 @@ monkey.patch_socket()
 
 from modules import *
 from dnslib import *
+import sys
 
 import itertools
 
 configuration = load_config()
-nameservers = itertools.cycle(configuration['nameservers']['default'])
 
-AF_INET = 2
-SOCK_DGRAM = 2
+heartbeat = scheduler.heartbeat(configuration)
+if not scheduler.nameserver_check_scheduler(heartbeat):
+    pretty_log("Heartbeat scheduler not initialized... Bye")
+    sys.exit(1)
 
-s = socket.socket(AF_INET, SOCK_DGRAM)
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((configuration['bind'], int(configuration['port'])))
 
 def dns_handler(s, peer, data):
@@ -30,7 +32,7 @@ def dns_handler(s, peer, data):
     pretty_log("Request (%s): %r (%s)" % (str(peer), qname.label, QTYPE[qtype]))
     reply = DNSRecord(DNSHeader(id=id, qr=1, aa=1, ra=1), q=request.q)
 
-    backend_query_fetch = dns_query(qname, qtype, nameservers.next())
+    backend_query_fetch = dns_query(qname, qtype, heartbeat.nameservers.next())
     while backend_query_fetch.__len__() > 0:
         record = backend_query_fetch.pop(0)
         #####

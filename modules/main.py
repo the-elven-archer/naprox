@@ -47,16 +47,20 @@ def pretty_log(message):
 def dns_query(record_body, record_type, nameserver):
     """ Query the AUTH DNS servers """
     if record_body is not None or record_type is not None or nameserver is not None:
-        print nameserver
         query_record = dns.name.from_text(str(record_body))
         if type(record_type) is not int:
             record_type = dns.rdatatype.from_text(record_type)
 
         query_request = dns.message.make_query(query_record, record_type)
-        response = dns.query.tcp(query_request, nameserver, one_rr_per_rrset=True)
+
+        result = []
+
+        try:
+            response = dns.query.tcp(query_request, nameserver, one_rr_per_rrset=True, timeout=5)
+        except:
+            return result
 
         # if record_type == "ANY":
-        result = []
         for rrset in response.answer:
             parse_array = re.split('\s+', rrset.to_text())
             record_reply_r = parse_array[0]
@@ -69,7 +73,8 @@ def dns_query(record_body, record_type, nameserver):
                            "content": record_data_r,
                            "ttl": int(record_ttl_r),
                            "domain_id": "-1"})
-        pretty_log(result)
+        pretty_log(nameserver)
+        # pretty_log(result)
         return result
 
 

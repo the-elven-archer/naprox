@@ -14,6 +14,7 @@ class heartbeat():
         self.nameservers = itertools.cycle([])
 
     def nameserver_check(self):
+        self.config_nameservers = []
         serverlist = self.configuration['nameservers']['default']
         for server in serverlist:
             check = dns_query(self.configuration['heartbeat']['default']['record'],

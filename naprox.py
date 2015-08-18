@@ -15,6 +15,7 @@ import itertools
 configuration = load_config()
 
 heartbeat = scheduler.heartbeat(configuration)
+print heartbeat
 if not scheduler.nameserver_check_scheduler(heartbeat):
     pretty_log("Heartbeat scheduler not initialized... Bye")
     sys.exit(1)

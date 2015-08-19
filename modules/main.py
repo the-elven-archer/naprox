@@ -73,7 +73,6 @@ def dns_query(record_body, record_type, nameserver):
                            "content": record_data_r,
                            "ttl": int(record_ttl_r),
                            "domain_id": "-1"})
-        pretty_log(nameserver)
         # pretty_log(result)
         return result
 

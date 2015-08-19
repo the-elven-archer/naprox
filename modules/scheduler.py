@@ -3,7 +3,11 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from .main import dns_query, pretty_log
 from time import sleep
+
+from datetime import datetime, timedelta
+
 import itertools
+
 
 
 class heartbeat():
@@ -33,7 +37,8 @@ def nameserver_check_scheduler(heartbeat_obj):
     sched = BackgroundScheduler()
     sched.add_job(heartbeat_obj.nameserver_check,
                   'interval',
-                  seconds=int(heartbeat_obj.configuration['heartbeat']['default']['interval']))
+                  seconds=int(heartbeat_obj.configuration['heartbeat']['default']['interval']),
+                  start_date=str(datetime.now() + timedelta(0, 1)))
     sched.start()
 
     retries_check = int(heartbeat_obj.configuration['heartbeat']['default']['init_retries'])

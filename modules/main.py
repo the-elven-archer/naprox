@@ -1,8 +1,5 @@
 #!/usr/bin/env python2
 
-from flask import Response
-import json
-
 import re
 # import uuid
 
@@ -18,6 +15,8 @@ import dns.resolver
 from configobj import ConfigObj
 import os
 
+import logging
+
 # DEBUG
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
@@ -29,18 +28,18 @@ def load_config(config_file=None):
         config_file = "%s/etc/naprox.conf" % str(os.getcwd())
     config = ConfigObj(config_file)
     print "Loading config from %s... " % config_file
+    logging.basicConfig(filename=config['logfile'],
+                        format='%(asctime)s %(message)s',
+                        level=logging.INFO)
+    logging.getLogger('apscheduler.scheduler').setLevel('WARNING')
+
     return config
-
-
-def api_response(dictionary=None):
-    """ Return dictionary as a json Response object """
-    if dictionary is not None:
-        return Response(json.dumps(dictionary, indent=4, sort_keys=True), mimetype="application/json")
 
 
 def pretty_log(message):
     """ Return a message using pretty print """
     if message is not None:
+        logging.info(message)
         return pp.pprint(message)
 
 

@@ -26,6 +26,8 @@ def load_config(config_file=None):
     """ Load config from file """
     if config_file is None:
         config_file = "%s/etc/naprox.conf" % str(os.getcwd())
+    if not os.path.isfile(config_file):
+        return False
     config = ConfigObj(config_file)
     print "Loading config from %s... " % config_file
     logging.basicConfig(filename=config['logfile'],

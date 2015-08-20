@@ -11,7 +11,7 @@ import itertools
 
 
 class heartbeat():
-
+    """ Create the heartbeat object """
     def __init__(self, config):
         self.configuration = config
         self.config_nameservers = self.configuration['nameservers']['default']
@@ -34,6 +34,7 @@ class heartbeat():
 
 
 def nameserver_check_scheduler(heartbeat_obj):
+    """ Schedule the check using the heartbeat object """
     sched = BackgroundScheduler()
     sched.add_job(heartbeat_obj.nameserver_check,
                   'interval',

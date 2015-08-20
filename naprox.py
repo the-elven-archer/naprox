@@ -10,8 +10,17 @@ from dnslib import *
 import sys
 
 import itertools
+import argparse
 
-configuration = load_config()
+parser = argparse.ArgumentParser(description="Authoritative DNS proxy.")
+parser.add_argument("-c", help="config file")
+args = parser.parse_args()
+
+configuration = load_config(config_file=args.c)
+if configuration is False:
+    pretty_log("Config file not found... Bye")
+    sys.exit(1)
+
 
 heartbeat = scheduler.heartbeat(configuration)
 if not scheduler.nameserver_check_scheduler(heartbeat):

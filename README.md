@@ -36,3 +36,13 @@ logfile = log/naprox.log
         # waiting for a heartbeat result on boot time
         init_retries = 5
 ```
+
+## Dependencies
+- dnslib
+- dnspython
+- APScheduler
+
+- itertools
+- argparse
+- logging
+- pprint  

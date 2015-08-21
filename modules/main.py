@@ -124,5 +124,11 @@ def dns_srv_parse(srv_data):
 def dns_txt_clean(txt_data):
     """ Clean TXT record searching for quotes et al """
     if txt_data is not None or txt_data is str:
-        txt_data_clean = re.sub('"', '', txt_data)
+        # txt_data_clean = re.sub('"', '', txt_data)
+        if re.search("spf", txt_data, flags=re.IGNORECASE):
+            txt_data_clean = re.sub('"', '',txt_data)
+        elif re.search("v=DKIM1", txt_data, flags=re.IGNORECASE):
+            txt_data_clean = re.split('\s+', re.sub('"', '',txt_data))
+        else:
+            txt_data_clean = re.sub('"', '',txt_data)
         return txt_data_clean

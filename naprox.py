@@ -120,9 +120,7 @@ def dns_handler(s, peer, data):
 
     s.sendto(reply.pack(), peer)
 
+# To be changed
 while True:
     data, peer = s.recvfrom(8192)
     gevent.spawn(dns_handler, s, peer, data)
-
-
-

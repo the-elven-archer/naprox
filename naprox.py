@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 import gevent
-from gevent import socket, monkey
+from gevent import socket, monkey, Greenlet
 
 monkey.patch_socket()
 
@@ -122,4 +122,4 @@ def dns_handler(s, peer, data):
 
 while True:
     data, peer = s.recvfrom(8192)
-    gevent.spawn(dns_handler, s, peer, data)
+    gevent.spawn_raw(dns_handler, s, peer, data)

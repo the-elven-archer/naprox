@@ -57,7 +57,7 @@ def dns_query(record_body, record_type, nameserver):
         result = []
 
         try:
-            response = dns.query.tcp(query_request, nameserver, one_rr_per_rrset=True, timeout=5)
+            response = dns.query.udp(query_request, nameserver, one_rr_per_rrset=True, timeout=5)
         except:
             return result
 

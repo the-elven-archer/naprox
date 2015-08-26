@@ -1,0 +1,6 @@
+gevent
+dnslib
+dnspython
+APscheduler
+configobj
+supervisor

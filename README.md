@@ -1,5 +1,5 @@
 # naprox
-A Python gevent based Authoritative DNS Proxy server.
+A Python ~~gevent~~ Twisted based Authoritative DNS Proxy server.
 
 ## Usage
 
@@ -41,9 +41,9 @@ logfile = log/naprox.log
 - dnslib
 - dnspython
 - APScheduler
+- Twisted
 
 - itertools
 - argparse
 - logging
 - pprint  
-

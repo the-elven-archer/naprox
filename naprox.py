@@ -123,5 +123,5 @@ class DNSEcho(protocol.DatagramProtocol):
     def datagramReceived(self, data, address):
         reactor.callInThread(self.requestProcess, data, address)
 
-reactor.listenUDP(int(configuration['port']), DNSEcho())
+reactor.listenUDP(int(configuration['port']), DNSEcho(), interface=str(configuration['bind']))
 reactor.run()

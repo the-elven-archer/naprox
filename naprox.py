@@ -38,7 +38,7 @@ class DNSEcho(protocol.DatagramProtocol):
         qtype = request.q.qtype
         #
         pretty_log("Request (%s): %r (%s)" % (str(host), qname.label, QTYPE[qtype]))
-        reply = DNSRecord(DNSHeader(id=id, qr=1, aa=1, ra=1), q=request.q)
+        reply = DNSRecord(DNSHeader(id=id, qr=1, aa=1, ra=0, rd=0), q=request.q)
 
         backend_query_fetch = dns_query(qname, qtype, heartbeat.nameservers.next())
         while backend_query_fetch.__len__() > 0:

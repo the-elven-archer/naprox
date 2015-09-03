@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 import itertools
 
 
-
 class heartbeat():
     """ Create the heartbeat object """
     def __init__(self, config):
@@ -36,11 +35,11 @@ class heartbeat():
 def nameserver_check_scheduler(heartbeat_obj):
     """ Schedule the check using the heartbeat object """
     sched = BackgroundScheduler()
-    sched.start()
     sched.add_job(heartbeat_obj.nameserver_check,
                   'interval',
                   seconds=int(heartbeat_obj.configuration['heartbeat']['default']['interval']),
                   start_date=str(datetime.now() + timedelta(0, 1)))
+    sched.start()
 
     retries_check = int(heartbeat_obj.configuration['heartbeat']['default']['init_retries'])
     retry_wait = int(10)

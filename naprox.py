@@ -3,6 +3,7 @@
 from twisted.internet import protocol, reactor, threads
 from twisted.python import threadable
 threadable.init(1)
+from threading import Thread
 
 from modules import *
 from dnslib import *
@@ -124,4 +125,9 @@ class DNSEcho(protocol.DatagramProtocol):
         reactor.callInThread(self.requestProcess, data, address)
 
 reactor.listenUDP(int(configuration['port']), DNSEcho(), interface=str(configuration['bind']))
-reactor.run()
+# reactor.run()
+Thread(target=reactor.run, args=(False,)).start()
+
+app.config['heartbeat'] = heartbeat
+app.run(host=str("127.0.0.1"),
+        port=int(5000))

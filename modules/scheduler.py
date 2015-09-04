@@ -35,11 +35,10 @@ class heartbeat():
 def nameserver_check_scheduler(heartbeat_obj):
     """ Schedule the check using the heartbeat object """
     sched = BackgroundScheduler()
-    sched.add_job(heartbeat_obj.nameserver_check,
-                  'interval',
-                  seconds=int(heartbeat_obj.configuration['heartbeat']['default']['interval']),
-                  start_date=str(datetime.now() + timedelta(0, 1)))
     sched.start()
+    sched.add_job(heartbeat_obj.nameserver_check,
+                  'cron',
+                  second=("*/%s" % int(heartbeat_obj.configuration['heartbeat']['default']['interval'])))
 
     retries_check = int(heartbeat_obj.configuration['heartbeat']['default']['init_retries'])
     retry_wait = int(10)

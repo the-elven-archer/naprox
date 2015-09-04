@@ -9,7 +9,6 @@ from modules import *
 from dnslib import *
 import sys
 
-import itertools
 import argparse
 
 parser = argparse.ArgumentParser(description="Authoritative DNS proxy.")
@@ -129,5 +128,5 @@ reactor.listenUDP(int(configuration['port']), DNSEcho(), interface=str(configura
 Thread(target=reactor.run, args=(False,)).start()
 
 app.config['heartbeat'] = heartbeat
-app.run(host=str("127.0.0.1"),
+app.run(host=str("0.0.0.0"),
         port=int(5000))

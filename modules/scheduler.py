@@ -2,9 +2,7 @@
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from .main import dns_query, pretty_log
-from time import sleep
-
-from datetime import datetime, timedelta
+from time import sleep, strftime
 
 import itertools
 
@@ -15,6 +13,7 @@ class heartbeat():
         self.configuration = config
         self.config_nameservers = self.configuration['nameservers']['default']
         self.nameservers = itertools.cycle([])
+        self.last_check = ""
 
     def nameserver_check(self):
         self.config_nameservers = []
@@ -29,6 +28,7 @@ class heartbeat():
             else:
                 pretty_log("[Heartbeat]     %s    [ ERROR ]" % server)
         self.nameservers = itertools.cycle(self.config_nameservers)
+        self.last_check = strftime("%c")
         return True
 
 

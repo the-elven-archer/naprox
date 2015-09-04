@@ -1,6 +1,6 @@
 <html>
 <head>
-  <meta http-equiv="refresh" content="5">
+  <meta http-equiv="refresh" content="10">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="//cdn.corpam.com.ar/bootstrap/stable/css/bootstrap.min.css" rel="stylesheet">
   <link href="//cdn.corpam.com.ar/bootstrap/stable/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -12,8 +12,7 @@
 
 </head>
   <body>
-    <h1>Naprox</h1>
-    <h4>status page</h4>
+    <h1>Naprox</h1> status page
     <hr>
     <!-- <p>{{ config_servers }}</p> -->
     <!-- <p>{{ current_servers }}</p> -->
@@ -29,7 +28,7 @@
         <tr class="success">
             <td style="width:100px">OK</td>
           {% else %}
-        <tr class="danger">
+        <tr class="alert-danger">
             <td style="width:100px">FAIL</td>
           {% endif %}
           <td>{{ server }}</td>
@@ -38,10 +37,12 @@
       </tbody>
       </table>
     </div>
+    <p align="left">Last check: {{ last_check }}</span>
     <p align="right"><span id="time"></span>
   </body>
-   <script language="javascript">
+  <script language="javascript">
       var today = new Date();
       document.getElementById('time').innerHTML=today;
-   </script>
+  </script>
+  
 </html>

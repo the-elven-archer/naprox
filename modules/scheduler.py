@@ -28,7 +28,7 @@ class heartbeat():
             else:
                 pretty_log("[Heartbeat]     %s    [ ERROR ]" % server)
         self.nameservers = itertools.cycle(self.config_nameservers)
-        self.last_check = strftime("%c")
+        self.last_check = strftime("%c %Z")
         return True
 
 

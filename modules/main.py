@@ -22,6 +22,7 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 #
 
+
 def load_config(config_file=None):
     """ Load config from file """
     if config_file is None:

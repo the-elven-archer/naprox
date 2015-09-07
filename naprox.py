@@ -130,5 +130,13 @@ Thread(target=reactor.run, args=(False,)).start()
 # Starting Flask status page
 if configuration['status']:
     app.config['heartbeat'] = heartbeat
+    try:
+        if configuration['status']['username'] and configuration['status']['password']:
+            pretty_log("HTTP Status Auth Enabled")
+            app.config['username'] = configuration['status']['username']
+            app.config['password'] = configuration['status']['password']
+    except KeyError:
+        app.config['username'] = None
+        app.config['password'] = None
     app.run(host=str(configuration['status']['bind']),
             port=int(configuration['status']['port']))

@@ -1,7 +1,8 @@
 #!/usr/bin/env python2
 
 from flask import Flask
-from flask import render_template, Response
+from flask import render_template, Response, request
+from functools import wraps
 
 import json
 
@@ -9,7 +10,31 @@ import json
 app = Flask(__name__)
 
 
+# Auth
+def check_auth(username, password):
+    return username == app.config['username'] and password == app.config['password']
+
+
+def authenticate():
+    return Response('login required',
+                    401,
+                    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if app.config['username'] is not None or app.config['password'] is not None:
+            auth = request.authorization
+            if not auth or not check_auth(auth.username, auth.password):
+                return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+#
+
+
 @app.route("/")
+@requires_auth
 def index():
     current_servers = app.config['heartbeat'].config_nameservers
     config_servers = app.config['heartbeat'].configuration['nameservers']['default']
@@ -21,6 +46,7 @@ def index():
 
 
 @app.route("/json")
+@requires_auth
 def json_api():
     current_servers = app.config['heartbeat'].config_nameservers
     config_servers = app.config['heartbeat'].configuration['nameservers']['default']

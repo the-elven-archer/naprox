@@ -5,9 +5,11 @@ from flask import render_template, Response, request
 from functools import wraps
 
 import json
+from socket import getfqdn
 
 
 app = Flask(__name__)
+app.config['local_fqdn'] = getfqdn()
 
 
 # Auth
@@ -42,7 +44,8 @@ def index():
     return render_template("status.html",
                            current_servers=current_servers,
                            config_servers=config_servers,
-                           last_check=last_check)
+                           last_check=last_check,
+                           servername=app.config['local_fqdn'])
 
 
 @app.route("/json")

@@ -4,3 +4,4 @@ dnspython
 APscheduler
 configobj
 supervisor
+Flask

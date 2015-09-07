@@ -123,10 +123,12 @@ class DNSEcho(protocol.DatagramProtocol):
     def datagramReceived(self, data, address):
         reactor.callInThread(self.requestProcess, data, address)
 
+# Bind DNS Port
 reactor.listenUDP(int(configuration['port']), DNSEcho(), interface=str(configuration['bind']))
-# reactor.run()
 Thread(target=reactor.run, args=(False,)).start()
 
-app.config['heartbeat'] = heartbeat
-app.run(host=str("0.0.0.0"),
-        port=int(5000))
+# Starting Flask status page
+if configuration['status']:
+    app.config['heartbeat'] = heartbeat
+    app.run(host=str(configuration['status']['bind']),
+            port=int(configuration['status']['port']))

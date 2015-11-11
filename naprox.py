@@ -115,6 +115,42 @@ class DNSEcho(protocol.DatagramProtocol):
                                               weight=srv_data['weight'],
                                               port=srv_data['port'],
                                               target=srv_data['target'])))
+
+            ############
+            # DNSSEC
+            ############
+
+            #####
+            # RRSIG
+            #####
+            if (qtype == QTYPE.RRSIG or qtype == QTYPE.ANY) and record['qtype'] == "RRSIG":
+                rrsig_data = dns_rrsig_parse(record['content'])
+                reply.add_answer(RR(qname,
+                                    QTYPE.RRSIG,
+                                    ttl=record['ttl'],
+                                    rdata=RRSIG(rrsig_data['covered'],
+                                                rrsig_data['algorithm'],
+                                                rrsig_data['labels'],
+                                                rrsig_data['orig_ttl'],
+                                                rrsig_data['sig_expiration'],
+                                                rrsig_data['sig_inception'],
+                                                rrsig_data['key_id'],
+                                                rrsig_data['signer'],
+                                                rrsig_data['sig'])))
+
+            ####
+            # DNSKEY
+            ####
+            if (qtype == QTYPE.DNSKEY or qtype == QTYPE.ANY) and record['qtype'] == "DNSKEY":
+                dnskey_data = dns_dnskey_parse(record['content'])
+                reply.add_answer(RR(qname,
+                                    QTYPE.DNSKEY,
+                                    ttl=record['ttl'],
+                                    rdata=DNSKEY(dnskey_data['flags'],
+                                                 dnskey_data['protocol'],
+                                                 dnskey_data['algorithm'],
+                                                 dnskey_data['key'])))
+
         if not reply.rr:
             reply.header.set_rcode(3)
 

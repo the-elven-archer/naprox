@@ -1,6 +1,9 @@
 #!/usr/bin/env python2
 
 import re
+import time
+import calendar
+import base64
 # import uuid
 
 import dns
@@ -127,9 +130,47 @@ def dns_txt_clean(txt_data):
     if txt_data is not None or txt_data is str:
         # txt_data_clean = re.sub('"', '', txt_data)
         if re.search("spf", txt_data, flags=re.IGNORECASE):
-            txt_data_clean = re.sub('"', '',txt_data)
+            txt_data_clean = re.sub('"', '', txt_data)
         elif re.search("v=DKIM1", txt_data, flags=re.IGNORECASE):
-            txt_data_clean = re.split('\s+', re.sub('"', '',txt_data))
+            txt_data_clean = re.split('\s+', re.sub('"', '', txt_data))
         else:
-            txt_data_clean = re.sub('"', '',txt_data)
+            txt_data_clean = re.sub('"', '', txt_data)
         return txt_data_clean
+
+
+# DNSSEC
+def dns_rrsig_parse(rrsig_data):
+    """ Parse RRSIGN data in str in a fashionable way """
+    if rrsig_data is not None or rrsig_data is str:
+        rrsig_data_explode = re.split("\s+", rrsig_data)
+        if rrsig_data_explode.__len__() < 8:
+            return {}
+        else:
+            sig_data = "".join(rrsig_data_explode[8:])
+            time_format = "%Y%m%d%H%M%S"
+            parsed_data = {'covered': dns.rdatatype.from_text(rrsig_data_explode[0]),
+                           'algorithm': int(rrsig_data_explode[1]),
+                           'labels': int(rrsig_data_explode[2]),
+                           'orig_ttl': int(rrsig_data_explode[3]),
+                           'sig_expiration': int(calendar.timegm(time.strptime(rrsig_data_explode[4], time_format))),
+                           'sig_inception': int(calendar.timegm(time.strptime(rrsig_data_explode[5], time_format))),
+                           'key_id': int(rrsig_data_explode[6]),
+                           'signer': rrsig_data_explode[7],
+                           'sig': base64.b64decode(sig_data)}
+        return parsed_data
+
+
+def dns_dnskey_parse(dnskey_data):
+    """ Parse DNSKEY data in str in a fashionable way """
+    if dnskey_data is not None or dnskey_data is str:
+        dnskey_data_explode = re.split("\s+", dnskey_data)
+        if dnskey_data_explode.__len__() < 4:
+            return {}
+        else:
+            key_data = "".join(dnskey_data_explode[3:])
+            parsed_data = {'flags': int(dnskey_data_explode[0]),
+                           'protocol': int(dnskey_data_explode[1]),
+                           'algorithm': int(dnskey_data_explode[2]),
+                           'key': base64.b64decode(key_data)}
+            print parsed_data
+        return parsed_data
